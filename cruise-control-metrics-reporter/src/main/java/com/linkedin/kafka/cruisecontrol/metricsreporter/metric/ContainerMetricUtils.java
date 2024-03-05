@@ -13,8 +13,9 @@ import java.nio.charset.StandardCharsets;
 
 public final class ContainerMetricUtils {
   // Paths used to get cgroup information
-  private static final String QUOTA_PATH = "/sys/fs/cgroup/cpu/cpu.cfs_quota_us";
-  private static final String PERIOD_PATH = "/sys/fs/cgroup/cpu/cpu.cfs_period_us";
+  private static final String QUOTA_PATH_CGROUP_V1 = "/sys/fs/cgroup/cpu/cpu.cfs_quota_us";
+  private static final String PERIOD_PATH_CGROUP_V1 = "/sys/fs/cgroup/cpu/cpu.cfs_period_us";
+  private static final String MAX_PATH_CGROUP_V2 = "/sys/fs/cgroup/cpu.max";
   // Unix command to execute inside a Linux container to get the number of logical processors available to the node
   private static final String NPROC = "nproc";
   // A CPU quota value of -1 indicates that the cgroup does not adhere to any CPU time restrictions
@@ -29,7 +30,7 @@ public final class ContainerMetricUtils {
    * @return Cgroups CPU period in microseconds as a double.
    */
   private static double getCpuPeriod() throws IOException {
-    return Double.parseDouble(readFile(CgroupFiles.PERIOD_PATH.getValue()));
+    return Double.parseDouble(readFile(CgroupFiles.PERIOD_PATH_CGROUP_V1.getValue()));
   }
 
   /**
@@ -39,7 +40,7 @@ public final class ContainerMetricUtils {
    * @return Cgroups CPU quota in microseconds as a double.
    */
   private static double getCpuQuota() throws IOException {
-    return Double.parseDouble(readFile(CgroupFiles.QUOTA_PATH.getValue()));
+    return Double.parseDouble(readFile(CgroupFiles.QUOTA_PATH_CGROUP_V1.getValue()));
   }
 
   /**
@@ -108,8 +109,9 @@ public final class ContainerMetricUtils {
   }
 
   private enum CgroupFiles {
-    QUOTA_PATH(ContainerMetricUtils.QUOTA_PATH),
-    PERIOD_PATH(ContainerMetricUtils.PERIOD_PATH);
+    QUOTA_PATH_CGROUP_V1(ContainerMetricUtils.QUOTA_PATH_CGROUP_V1),
+    PERIOD_PATH_CGROUP_V1(ContainerMetricUtils.PERIOD_PATH_CGROUP_V1);
+    MAX_PATH_CGROUP_V2(ContainerMetricUtils.MAX_PATH_CGROUP_V2);
 
     private final String _value;
 
