@@ -42,6 +42,7 @@ public final class ContainerMetricUtils {
   private static double getCpuQuota() throws IOException {
     try {
       return Double.parseDouble(readFile(CgroupFiles.QUOTA_PATH_CGROUP_V1.getValue()));
+    }
     catch (FileNotFoundException e) {
       return NO_CPU_QUOTA;
     }
