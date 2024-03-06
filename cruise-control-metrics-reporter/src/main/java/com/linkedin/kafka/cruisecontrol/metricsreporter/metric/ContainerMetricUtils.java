@@ -40,7 +40,11 @@ public final class ContainerMetricUtils {
    * @return Cgroups CPU quota in microseconds as a double.
    */
   private static double getCpuQuota() throws IOException {
-    return Double.parseDouble(readFile(CgroupFiles.QUOTA_PATH_CGROUP_V1.getValue()));
+    try {
+      return Double.parseDouble(readFile(CgroupFiles.QUOTA_PATH_CGROUP_V1.getValue()));
+    catch (FileNotFoundException e) {
+      return NO_CPU_QUOTA;
+    }
   }
 
   /**
@@ -110,7 +114,7 @@ public final class ContainerMetricUtils {
 
   private enum CgroupFiles {
     QUOTA_PATH_CGROUP_V1(ContainerMetricUtils.QUOTA_PATH_CGROUP_V1),
-    PERIOD_PATH_CGROUP_V1(ContainerMetricUtils.PERIOD_PATH_CGROUP_V1);
+    PERIOD_PATH_CGROUP_V1(ContainerMetricUtils.PERIOD_PATH_CGROUP_V1),
     MAX_PATH_CGROUP_V2(ContainerMetricUtils.MAX_PATH_CGROUP_V2);
 
     private final String _value;
